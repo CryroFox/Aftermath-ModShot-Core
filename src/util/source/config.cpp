@@ -191,7 +191,7 @@ void Config::read(int argc, char *argv[])
 
 	SE.sourceCount = clamp(SE.sourceCount, 1, 64);
 
-	commonDataPath = prefPath(".", "OneShot");
+	commonDataPath = prefPath(".", "OneShot Aftermath");
 
 	//Hardcode some ini/version settings
 	rgssVersion = 1;
