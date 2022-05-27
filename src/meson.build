@@ -20,14 +20,13 @@ zlib = dependency('zlib', static: build_static)
 nsgif = dependency('libnsgif', static: build_static)
 
 if host_system == 'windows'
-    bz2 = dependency('bzip2')
+	bz2 = dependency('bzip2')
 	iconv = compilers['cpp'].find_library('iconv')
 else
-    bz2 = compilers['cpp'].find_library('bz2')
+	bz2 = compilers['cpp'].find_library('bz2')
 	iconv = compilers['cpp'].find_library('iconv')
-    gtk = dependency('gtk+-2.0')
-    xfconf = dependency('libxfconf-0')
-
+	gtk = dependency('gtk+-3.0')
+	xfconf = dependency('libxfconf-0')
 	global_dependencies += [gtk, xfconf]
 endif
 
@@ -64,6 +63,7 @@ if host_system == 'windows'
     global_dependencies += compilers['cpp'].find_library('winmm')
     global_dependencies += compilers['cpp'].find_library('Secur32')
     global_dependencies += compilers['cpp'].find_library('Shlwapi')
+    global_dependencies += compilers['cpp'].find_library('gdiplus')
 endif
 
 main_source = files(
@@ -127,6 +127,8 @@ if steam == true
 endif
 
 if host_system == 'windows'
+    global_sources += files('modshot/source/notifications_win32.cpp')
 else
     global_sources += files('oneshot/source/xdg-user-dir-lookup.c')
+    global_sources += files('modshot/source/notifications_unix.cpp')
 endif

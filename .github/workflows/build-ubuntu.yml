@@ -1,5 +1,7 @@
 name: Build ModShot Ubuntu
-on: workflow_dispatch
+on:
+  - workflow_dispatch
+  - pull_request
 jobs:
   build-ubuntu:
     name: Build ModShot for Linux
@@ -16,6 +18,7 @@ jobs:
         - name: Build
           working-directory: ${{ github.workspace }}
           run: |
+              sudo apt update
               bash setup.sh
               pip3 install meson ninja
               cd linux

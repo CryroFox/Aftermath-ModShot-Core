@@ -86,8 +86,8 @@ void wallpaperBindingTerminate();
 #endif
 void nikoBindingInit();
 void oneshotBindingInit();
+void modshotBindingInit();
 void steamBindingInit();
-void modshotwindowBindingInit();
 void aleffectBindingInit();
 void screenBindingInit();
 RB_METHOD(mriPrint);
@@ -124,8 +124,8 @@ static void mriBindingInit()
 	wallpaperBindingInit();
 	nikoBindingInit();
 	oneshotBindingInit();
+	modshotBindingInit();
 	steamBindingInit();
-	modshotwindowBindingInit();
 	aleffectBindingInit();
 	screenBindingInit();
 	rb_define_global_const("MODSHOT_VERSION", rb_str_new_cstr(MODSHOT_VERSION));

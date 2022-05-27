@@ -63,6 +63,7 @@ struct OneshotPrivate
 	std::string txtYes;
 	std::string txtNo;
 
+	// Booleans
 	bool exiting;
 	bool allowExit;
 
@@ -207,25 +208,25 @@ Oneshot::Oneshot(RGSSThreadData &threadData) :
 
 	//Get user's name
 	ULONG size = 0;
-	GetUserNameEx(NameDisplay, 0, &size);
+	GetUserNameExW(NameDisplay, 0, &size);
 	if (GetLastError() == ERROR_MORE_DATA)
 	{
 		//Get their full (display) name
-		char* name = new char[size];
-		GetUserNameEx(NameDisplay, name, &size);
-		p->userName = w32_fromWide((WCHAR*) name);
+		wchar_t* name = new wchar_t[size];
+		GetUserNameExW(NameDisplay, name, &size);
+		p->userName = w32_fromWide(name);
 		delete [] name;
 	}
 	else
 	{
 		//Get their login name
 		DWORD size2 = 0;
-		GetUserName(0, &size2);
+		GetUserNameW(0, &size2);
 		if (GetLastError() == ERROR_INSUFFICIENT_BUFFER)
 		{
-			char* name = new char[size2];
-			GetUserName(name, &size2);
-			p->userName = w32_fromWide((WCHAR*) name);
+			wchar_t* name = new wchar_t[size2];
+			GetUserNameW(name, &size2);
+			p->userName = w32_fromWide(name);
 			delete [] name;
 		}
 	}
@@ -504,7 +505,7 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 	data.title = title;
 	data.message = body;
 #ifdef OS_W32
-	DWORD sound;
+	LPCTSTR sound;
 #endif
 
 	//Set type
@@ -515,19 +516,19 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 	default:
 		data.flags = SDL_MESSAGEBOX_INFORMATION;
 #ifdef OS_W32
-		sound = SND_ALIAS_SYSTEMQUESTION;
+		sound = (LPCTSTR)SND_ALIAS_SYSTEMQUESTION;
 #endif
 		break;
 	case MSG_WARN:
 		data.flags = SDL_MESSAGEBOX_WARNING;
 #ifdef OS_W32
-		sound = SND_ALIAS_SYSTEMEXCLAMATION;
+		sound = (LPCTSTR)SND_ALIAS_SYSTEMEXCLAMATION;
 #endif
 		break;
 	case MSG_ERR:
 		data.flags = SDL_MESSAGEBOX_WARNING;
 #ifdef OS_W32
-		sound = SND_ALIAS_SYSTEMASTERISK;
+		sound = (LPCTSTR)SND_ALIAS_SYSTEMASTERISK;
 #endif
 		break;
 	}
@@ -550,7 +551,7 @@ bool Oneshot::msgbox(int type, const char *body, const char *title)
 
 	// Show messagebox
 #ifdef OS_W32
-	PlaySoundW((LPCWSTR)sound, NULL, SND_ALIAS_ID | SND_ASYNC);
+	PlaySound(sound, NULL, SND_ALIAS_ID | SND_ASYNC);
 #endif
 	int button;
 

@@ -9,6 +9,8 @@ Thanks to [rkevin-arch](https://github.com/rkevin-arch) for the docker build!
 
 Thanks to [somedevfox](https://github.com/somedevfox) for helping ModShot ditch conan!
 
+Thanks to [hat_kid](https://github.com/thehatkid) for fixing username problem, introducing Notifications API and fixing wallpapers!
+
 > mkxp is a project that seeks to provide a fully open source implementation of the Ruby Game Scripting System (RGSS) interface used in the popular game creation software "RPG Maker XP", "RPG Maker VX" and "RPG Maker VX Ace" (trademark by Enterbrain, Inc.), with focus on Linux. The goal is to be able to run games created with the above software natively without changing a single file.
 >
 > It is licensed under the GNU General Public License v2+.

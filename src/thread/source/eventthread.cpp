@@ -41,11 +41,13 @@
 #include "oneshot.h"
 
 #include <string.h>
-
 #include <map>
-
 #include <iostream>
 
+#ifdef _WIN32
+	#include <windows.h>
+	#include <SDL2/SDL_syswm.h>
+#endif
 
 #define KEYCODE_TO_SCUFFEDCODE(keycode) (((keycode & 0xff) | ((keycode & 0x180) == 0x100 ? 0x180 : 0)) + SDL_NUM_SCANCODES)
 
@@ -123,6 +125,11 @@ void EventThread::process(RGSSThreadData &rtData)
 	SDL_Event event;
 	SDL_Window *win = rtData.window;
 	UnidirMessage<Vec2i> &windowSizeMsg = rtData.windowSizeMsg;
+
+#ifdef _WIN32
+    // receive SDL WM events
+    SDL_EventState(SDL_SYSWMEVENT, SDL_ENABLE);
+#endif
 
 	initALCFunctions(rtData.alcDev);
 
@@ -234,6 +241,44 @@ void EventThread::process(RGSSThreadData &rtData)
 		/* Now process the rest */
 		switch (event.type)
 		{
+#ifdef _WIN32
+		case SDL_SYSWMEVENT:
+			if (event.syswm.msg->msg.win.msg == 32769) // from WM_APP + 1 (32769)
+			{
+				int lParam = event.syswm.msg->msg.win.lParam;
+				//int uID = event.syswm.msg->msg.win.wParam;
+
+				switch (lParam)
+				{
+					case WM_LBUTTONUP:
+						Debug() << "[Tray Icon] was pressed";
+						// Switch to OneShot Window
+						SwitchToThisWindow(event.syswm.msg->msg.win.hwnd, true);
+						break;
+					case WM_RBUTTONDOWN:
+					case WM_CONTEXTMENU:
+						Debug() << "[Tray Icon] called context menu";
+						// Switch to OneShot Window
+						SwitchToThisWindow(event.syswm.msg->msg.win.hwnd, true);
+						break;
+					case WM_USER + 2: // NIN_BALLOONSHOW
+						Debug() << "[Balloon] was shown";
+						break;
+					case WM_USER + 3: // NIN_BALLOONHIDE
+						Debug() << "[Balloon] was hidden";
+						break;
+					case WM_USER + 4: // NIN_BALLOONTIMEOUT
+						Debug() << "[Balloon] was timeouted";
+						break;
+					case WM_USER + 5: // NIN_BALLOONUSERCLICK
+						Debug() << "[Balloon] was clicked";
+						// Switch to OneShot Window
+						SwitchToThisWindow(event.syswm.msg->msg.win.hwnd, true);
+						break;
+				}
+			}
+			break;
+#endif
 		case SDL_WINDOWEVENT :
 			switch (event.window.event)
 			{
@@ -309,7 +354,7 @@ void EventThread::process(RGSSThreadData &rtData)
 			SDL_UnlockMutex(inputMut);
 			break;
 
-		case SDL_KEYDOWN :
+		case SDL_KEYDOWN:
 			SDL_LockMutex(inputMut);
 			keyStates[KEYCODE_TO_SCUFFEDCODE(event.key.keysym.sym)] = true;
 			SDL_UnlockMutex(inputMut);

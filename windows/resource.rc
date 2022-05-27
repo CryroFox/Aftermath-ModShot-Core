@@ -2,3 +2,27 @@
 #include "resource.h"
 
 IDI_APPICON ICON "icon.ico"
+
+IDR_APPVERINFO VERSIONINFO
+FILEVERSION 1, 0, 0, 0
+PRODUCTVERSION 1, 0, 0, 0
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904E4"
+    BEGIN
+      VALUE "FileDescription", "OneShot"
+      VALUE "FileVersion", "1.0.0"
+      VALUE "ProductName", "ModShot"
+      VALUE "ProductVersion", "1.0.0"
+      VALUE "InternalName", "modshot"
+      VALUE "OriginalFilename", "modshot.exe"
+      VALUE "CompanyName", ""
+      VALUE "LegalCopyright", ""
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x409, 1252
+  END
+END
