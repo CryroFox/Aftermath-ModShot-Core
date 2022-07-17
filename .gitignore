@@ -58,5 +58,4 @@ assets/icon.ico
 !build-entrypoint-linux.sh
 !build-entrypoint-windows.bat
 
-.vscode
 out/
